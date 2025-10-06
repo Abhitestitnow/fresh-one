@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     private val flashcards = listOf(
-        Pair("Capital of France?", "Paris"),
-        Pair("5 + 7 = ?", "12"),
-        Pair("Android programming language?", "Kotlin"),
-        Pair("Largest planet?", "Jupiter")
+        "Capital of France?" to "Paris",
+        "5 + 7 = ?" to "12",
+        "Android language?" to "Kotlin",
+        "Largest planet?" to "Jupiter"
     )
 
     private var currentIndex = 0
