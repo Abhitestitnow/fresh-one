@@ -1,1 +1,54 @@
+# This workflow is triggered on pushes to the 'develop' branch.
+# It automatically sets up the environment, caches dependencies, 
+# and runs the build and unit tests for the Android application.
+
+name: Android CI Build and Test
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build_and_test:
+    # Set the runner environment to Ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      # Use an official GitHub action to set up the Java Development Kit (JDK)
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        cache: 'gradle'
+
+    - name: Cache Gradle Dependencies
+      # This step speeds up subsequent builds by caching downloaded dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: ${{ runner.os }}-gradle-
+
+    - name: Grant execution permission to gradlew
+      # Ensures the Gradle wrapper script is executable
+      run: chmod +x gradlew
+
+    - name: Run Unit Tests and Build Debug APK
+      # Executes the build process and runs all unit tests
+      run: ./gradlew build
+      
+    # Optionally, you can add a step here to upload the debug APK as an artifact
+    # - name: Upload Debug APK Artifact
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: app-debug
+    #     path: app/build/outputs/apk/debug/app-debug.apk
 
